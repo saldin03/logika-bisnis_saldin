@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order {{ item_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Toko A</h1>
+        <div class="order-content">
+            <img src="{{ url_for('static', filename=item_name | lower | replace(' ', '_') + '.png') }}" alt="{{ item_name }}">
+            <form method="post">
+                <div class="form-group">
+                    <label for="name">Nama:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Alamat:</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Nomor HP:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+
+                {% if error %}
+                <p style="color:red;">{{ error }}</p>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="price">Harga:</label>
+                    <span>Rp.{{ price }}</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Jumlah:</label>
+                    <input type="number" id="quantity" name="quantity" required>
+                </div>
+
+                <button type="submit">Pesan</button>
+            </form>
+        </div>
+    </div>
+    <footer>
+        <p>Ikuti Kami Di:</p>
+        <img src="{{ url_for('static', filename='facebook.png') }}" alt="Facebook">
+    </footer>
+</body>
+</html>
