@@ -24,15 +24,26 @@ def order(item_name):
         address = request.form['address']
         phone = request.form['phone']
         quantity = int(request.form['quantity'])
-        
-        # Validasi nomor HP
-        if not (phone.isdigit() and 10 <= len(phone) <= 12):
-            error = "Nomor HP tidak sesuai"
-            return render_template('order.html', item_name=item_name, price=price, error=error)
-        
         total_price = price * quantity
+        error = None
+        if not 10 <= len(phone) <= 12:
+            error = "Nomor HP tidak sesuai"
+        if error:
+            return render_template('order.html', item_name=item_name, price=price, error=error)
         return render_template('thank_you.html', name=name, address=address, phone=phone, total_price=total_price)
-    return render_template('order.html', item_name=item_name, price=price, error=None)
+    return render_template('order.html', item_name=item_name, price=price)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username == 'saldin' and password == 'saldin123':
+            return redirect(url_for('index'))
+        else:
+            error = "Username atau password salah"
+    return render_template('login.html', error=error)
 
 if __name__ == '__main__':
     app.run(debug=True)
