@@ -1,9 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # diperlukan untuk menggunakan session
 
 @app.route('/')
+def root():
+    if 'username' in session:
+        return redirect(url_for('index'))
+    return redirect(url_for('login'))
+
+@app.route('/index')
 def index():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
     items = [
         {"name": "Beras Emas", "price": 10000, "image": "2.png"},
         {"name": "Beras Kepal Super", "price": 15000, "image": "3.png"},
@@ -13,6 +23,9 @@ def index():
 
 @app.route('/order/<item_name>', methods=['GET', 'POST'])
 def order(item_name):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
     items = {
         "Beras Emas": 10000,
         "Beras Kepal Super": 15000,
@@ -40,10 +53,16 @@ def login():
         username = request.form['username']
         password = request.form['password']
         if username == 'saldin' and password == 'saldin123':
+            session['username'] = username
             return redirect(url_for('index'))
         else:
             error = "Username atau password salah"
     return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
